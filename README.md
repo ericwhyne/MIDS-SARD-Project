@@ -1,7 +1,11 @@
 # MIDS-SARD-Project
 W205 Project
 
-## Usage
+## Setup
+
+    sudo pip install -r depends.txt
+
+## Use
 
     ./twitter-stream-track.py <keywords file> <directory to store twitter logs in>/
 
@@ -10,7 +14,7 @@ W205 Project
 Store your twitter credentials in a file located ~/.twitterapi/sard.yml in yaml format.
 
     consumer_key: notrealslkdjf324hd8
-    consumer_secret: thesearentrealalkjdsflaksjdf348ofjwsdlkAA2gallyourkeyarebelongtous 
+    consumer_secret: thesearentrealalkjdsflaksjdf348ofjwsdlkAA2gallyourkeyarebelongtous
     access_token:  thesearentrealWYxOAuwA7v
     access_secret: notanactualkeyll8qAS6B84Ghbecausethatwouldbedumb
 
