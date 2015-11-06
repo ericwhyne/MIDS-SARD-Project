@@ -7,7 +7,7 @@ W205 Project
 
 ## Use
 
-    ./twitter-stream-track.py <keywords file> <directory to store twitter logs in>/
+    ./twitter-stream-to-file.py <keywords file> <directory to store twitter logs in>/
 
 ## Token File
 
