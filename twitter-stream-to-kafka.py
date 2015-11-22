@@ -1,44 +1,28 @@
-#!/usr/bin/python
-# coding=utf-8
-import yaml
+#!/usr/bin/env python
+# A basic example of listening to a streaming API and publishing to a Kafka topic
 import os
-#from birdy.twitter import StreamClient
+import yaml
 import json
-import re
-import sys
-from time import strftime
-from kafka import SimpleProducer, KafkaClient
+from birdy.twitter import StreamClient
+from kafka.client import KafkaClient
+from kafka.producer import SimpleProducer
 
-keywordsfile = sys.argv[1]
-tokenfile = os.path.expanduser("~") + "/.twitterapi/sard.yml"
-
+# Configuration
+keywordsfile = "keywords.txt" # one line per keyword
+tokenfile = os.path.expanduser("~") + "/.twitterapi/default.yml" # twitter credentials
+kafkanodes = 'xd-kafka01:9092, xd-kafka02:9092, xd-kafka03:9092, xd-kafka04:9092'
 
 with open(keywordsfile) as f:
     keywords = f.read().splitlines()
 keywords_string = ','.join(set(keywords))
+ 
+client = KafkaClient(kafkanodes)
+producer = SimpleProducer(client)
 
-print "Tracking tweets with these keywords:", keywords_string
-'''
-# Connect to Twitter
 tokens = yaml.safe_load(open(tokenfile))
 client = StreamClient(tokens['consumer_key'],tokens['consumer_secret'],tokens['access_token'],tokens['access_secret'])
 resource = client.stream.statuses.filter.post(track=keywords_string)
-'''
 
-# Configure Kafka
-kafka_topic = 'twitter-stream'
-kafka_hosts = "xd-kafka01:9092,xd-kafka02:9092,xd-kafka03:9092,xd-kafka04:9092"
-zookeeper_hosts = 'xd-zk01:2181,xd-zk02:2181,xd-zk03:2181/xdata'
-
-# To send messages synchronously
-kafka = KafkaClient(kafka_hosts)
-producer = SimpleProducer(kafka)
-producer.send_messages(b'test-topic', u'你怎么样?'.encode('utf-8'))
-
-#print client.topics
-'''
 for data in resource.stream():
-   tweetlog.write(json.dumps(data) + '\n')
-   if 'text' in data:
-       print data['text']
-'''
+  tweet = json.dumps(data) + '\n'
+  producer.send_messages('test', tweet)
